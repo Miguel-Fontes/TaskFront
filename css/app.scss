@@ -1,0 +1,129 @@
+$body-background-color: ghostwhite;
+$default-background-color: white;
+$decoration-border-color:  skyblue;
+$decoration-border-hover: deepskyblue;
+$alt-decoration-border: white;
+$alt-decoration-border-hover: white; 
+
+@mixin box-sizing() {
+    html {
+        box-sizing: border-box;
+    }
+    *, *:before, *:after {
+        box-sizing: inherit;
+    }
+}
+
+/* apply a natural box layout model to all elements, but allowing components to change */
+
+@include box-sizing();
+
+// Resets
+.list-unstyled {
+    list-style: none;
+    margin: 0 0 0 0;
+    padding: 0 0 0 0;
+}
+
+
+h1{
+    margin: 0 0 0 0;
+}
+
+// General Rules
+
+header {
+border-bottom: 1px solid black;
+margin-bottom: 1em;
+padding: 1em 1em 1em 1em;   
+background-color: white; 
+}
+
+
+
+main {
+    width: 100%;
+}
+
+body {
+    background-color: ghostwhite;
+    font-family: "Roboto Condensed", sans-serif;
+}
+
+section {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 1em 1em 1em 1em;
+}
+
+article {
+    width: 100%;
+    margin: 0 auto;
+}
+
+
+// Inputs Rules
+.big-input {
+    width: 100%;
+    padding: 1em 1em 1em 1em;
+    font-size: 1em; 
+    
+}
+
+
+//Buttons Rules
+.big-button {
+    padding: 1.5% 4.0% 1.5% 4.0%;
+    cursor: pointer;
+}
+
+.colorful-button {
+    background-color: skyblue;
+    
+    &:hover {
+    background-color: deepskyblue;
+    }
+}
+
+
+// Tasklist
+.list-container {
+    margin-top: 1em;
+}
+
+
+
+#taskList {
+    li {
+        margin-bottom: 0.3em;
+        padding: 0.5em;
+        border-bottom: 0.3em solid skyblue;
+        background-color: white;
+        box-shadow: 0 0 2px rgba(0,0,0,0.12),0 2px 4px rgba(0,0,0,0.24);
+        transition: all 0.1s ease-in-out;
+        
+        &:hover {
+            background-color: ghostwhite;
+            border-bottom: 0.3em solid deepskyblue;
+        }
+        
+        input {
+            margin: 0.5em 0.5em 0.5em 0.5em;
+        }
+        
+        &.done {
+            text-decoration: line-through;
+            background-color: mediumslateblue !important;
+            border-bottom: 0.3em solid blue;
+            color: white;
+        }
+    }
+}
+
+
+// Status Rules
+.error {
+    border: 1px solid red !important;
+}
+
+
