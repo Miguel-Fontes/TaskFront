@@ -58,10 +58,15 @@ article {
   border-bottom: 0.3em solid skyblue;
   background-color: white;
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.24);
-  transition: all 0.1s ease-in-out; }
+  transition: all 0.1s ease-in-out;
+  flex-basis: 100%; }
   #taskList li:hover {
     background-color: ghostwhite;
     border-bottom: 0.3em solid deepskyblue; }
+  #taskList li ul {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: columns; }
   #taskList li input {
     margin: 0.5em 0.5em 0.5em 0.5em; }
   #taskList li.done {
