@@ -12,19 +12,55 @@ var TODO = (function () {
 
   return {
     addTask: addTask,
-    markDone: markDone,
+    toggleDone: toggleDone,
     checkInput: checkInput,
     getTasks: tasks
   }
 
   function activate () {
+    // Busco os handlers para facilitar o trabalho nos segmentos posteriores.  
     taskInputElement = document.getElementById(taskInputId)
     addButtonElement = document.getElementById(addButtonId)
     taskListElement = document.getElementById(taskListId)
+    
+    // Adicionar opções de configuração do módulo.
   }
 
-  function markDone (event) {
-    toggleClass(event.target.parentElement, 'done')
+  /*function markDone (event) {
+    toggleClass(event.target.parentElement, 'done');
+    
+    var taskId = tasks[event.target.id];
+    
+    tasks.forEach(markTaskDone);
+    
+    function markTaskDone(taskId, task) {
+        // Vai sempre passar por todas as tarefas.
+        // Provavelmente esta não é a melhor forma de fazer isto, 
+        // mas estamos lidando com uma única lista, vai ter que server por enquanto.
+        task.status = task.id = taskId ? true : task.status; 
+    }
+    
+    tasks[event.target.id].done = true;
+    console.log(tasks[event.target.id]);
+  }*/
+  
+  function toggleDone (event) {
+    toggleClass(event.target.parentElement, 'done');
+    
+    var taskId = event.target.id;
+    
+    tasks.forEach(markTaskDone);
+    
+    function markTaskDone(task, index, array) {
+        // Vai sempre passar por todas as tarefas.
+        // Provavelmente esta não é a melhor forma de fazer isto, 
+        // mas estamos lidando com uma única lista, vai ter que server por enquanto.
+        
+        // Detalhe que a atribução é de !task.status
+        task.done = task.id == taskId ? !task.done : task.done; 
+    }
+ 
+    console.log(tasks[event.target.id]);
   }
 
   function addClass (element, cssClass) {
@@ -51,8 +87,8 @@ var TODO = (function () {
     var task = taskInputElement.value
     if (task != undefined && task.trim() != '' && task != '') {
       taskInputElement.value = ''
-      tasks.push(new Task(task, false))
-      taskListElement.innerHTML = taskListElement.innerHTML.concat('<li><input type="checkbox" id='+ id + ' onclick="TODO.markDone(event)">' + task + '</li>')
+      tasks.push(new Task(id, task, false))
+      taskListElement.innerHTML = taskListElement.innerHTML.concat('<li><input type="checkbox" id='+ id + ' onclick="TODO.toggleDone(event)">' + task + '</li>')
       id++;
       removeClass(taskInputElement, 'error')
     } else {
@@ -60,13 +96,17 @@ var TODO = (function () {
     }
   }
 
+  // Função que verifica os caracteres inputados no input de tasks.
+  // Se o usuário inputar 'ENTER', entendemos como um submit.
   function checkInput (e) {
     if (e.keyCode == 13) {
       addTask()
     }
   }
-
-  function Task (description, status) {
+  
+  // Modelo Task.
+  function Task (id, description, status) {
+    this.id = id;
     this.description = description
     this.done = status
   }
