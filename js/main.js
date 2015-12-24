@@ -25,24 +25,6 @@ var TODO = (function () {
     
     // Adicionar opções de configuração do módulo.
   }
-
-  /*function markDone (event) {
-    toggleClass(event.target.parentElement, 'done');
-    
-    var taskId = tasks[event.target.id];
-    
-    tasks.forEach(markTaskDone);
-    
-    function markTaskDone(taskId, task) {
-        // Vai sempre passar por todas as tarefas.
-        // Provavelmente esta não é a melhor forma de fazer isto, 
-        // mas estamos lidando com uma única lista, vai ter que server por enquanto.
-        task.status = task.id = taskId ? true : task.status; 
-    }
-    
-    tasks[event.target.id].done = true;
-    console.log(tasks[event.target.id]);
-  }*/
   
   function toggleDone (event) {
     toggleClass(event.target.parentElement, 'done');
@@ -59,10 +41,9 @@ var TODO = (function () {
         // Detalhe que a atribução é de !task.status
         task.done = task.id == taskId ? !task.done : task.done; 
     }
- 
-    console.log(tasks[event.target.id]);
   }
 
+  // Extrair estas funções para módulo utilidades CSS /////
   function addClass (element, cssClass) {
     if (!element.classList.contains(cssClass)) {
       element.classList.add(cssClass)
@@ -82,6 +63,7 @@ var TODO = (function () {
       addClass(element, cssClass)
     }
   }
+  // Até aqui //////////////////////////////////////////////
 
   function addTask () {
     var task = taskInputElement.value
