@@ -10,6 +10,14 @@ html {
   margin: 0 0 0 0;
   padding: 0 0 0 0; }
 
+button {
+  border: none;
+  -moz-padding-end: 60px;
+  padding-inline-end: 0px;
+  padding-block-end: 0px;
+  -moz-padding-start: 0px;
+  padding-inline-start: 0px; }
+
 h1 {
   margin: 0 0 0 0; }
 
@@ -17,7 +25,11 @@ header {
   border-bottom: 1px solid black;
   margin-bottom: 1em;
   padding: 1em 1em 1em 1em;
-  background-color: white; }
+  background-color: white;
+  vertical-align: middle; }
+  header h1 {
+    display: inline-block;
+    width: 80%; }
 
 main {
   width: 100%; }
@@ -39,10 +51,17 @@ article {
   width: 100%;
   padding: 1em 1em 1em 1em;
   font-size: 1em; }
+  .big-input:focus {
+    -webkit-transition: all .2s ease-in;
+    transition: all .2s ease-in;
+    transition-property: all;
+    transition-duration: 0.2s;
+    transition-timing-function: ease-in;
+    transition-delay: 0s;
+    border: 1px solid deepskyblue; }
 
 .big-button {
-  padding: 1.5% 4.0% 1.5% 4.0%;
-  cursor: pointer; }
+  padding: 0.5em 3em 0.5em 3em; }
 
 .colorful-button {
   background-color: skyblue; }

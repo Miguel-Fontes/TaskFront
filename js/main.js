@@ -14,7 +14,9 @@ var TODO = (function (css) {
     addTask: addTask,
     toggleDone: toggleDone,
     checkInput: checkInput,
-    getTasks: tasks
+    getTasks: tasks,
+    syncTask: syncTask,
+    getAllTasks: getAllTasks
   }
 
   function activate () {
@@ -22,7 +24,6 @@ var TODO = (function (css) {
     taskInputElement = document.getElementById(taskInputId)
     addButtonElement = document.getElementById(addButtonId)
     taskListElement = document.getElementById(taskListId)
-
   // Adicionar opções de configuração do módulo.
   }
 
@@ -70,4 +71,66 @@ var TODO = (function (css) {
     this.description = description
     this.done = status
   }
+
+  function RequestHttp (config) {
+    var srv = this
+
+    srv.xhr = new XMLHttpRequest()
+
+    srv.xhr.onreadystatechange = function () {
+      if (srv.xhr.readyState == XMLHttpRequest.DONE) {
+        srv.callback(srv.xhr.responseText)
+      }
+    }
+
+    srv.method = config.method || undefined
+    srv.url = config.url || undefined
+    srv.headers = config.headers || undefined
+    srv.async = config.async || true
+    srv.dataType = config.dataType || undefined
+    srv.data = config.data || undefined
+    srv.callback = config.callback || function (data) { console.log(data); }
+
+    srv.send = send
+    srv.open = open
+
+    function open (method, url, async) {
+      srv.xhr.open(srv.method || method, srv.url || url, srv.async || async)
+    }
+
+    function send (data) {
+      srv.xhr.send(srv.data || data || '')
+    }
+
+  }
+
+  function syncTask () {
+    var taskJSON = JSON.stringify(tasks[0])
+
+    var xhr = new RequestHttp({
+      method: 'POST',
+      url: 'http://localhost:8080/tasks',
+      async: true,
+      data: taskJSON,
+      callback: function (data) {console.log(data); }
+    })
+
+    xhr.open()
+    xhr.send()
+
+  }
+
+  function getAllTasks () {
+    var xhr = new RequestHttp({
+      method: 'GET',
+      url: 'http://localhost:8080/tasks',
+      async: true,
+      callback: function (data) {console.log(data) }
+    })
+
+    xhr.open()
+    xhr.send()
+
+  }
+
 })(CSSTOOLS)
