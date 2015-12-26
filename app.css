@@ -1,13 +1,3 @@
-@charset "UTF-8";
-/*Uso --> Setar os breaks nas vari├íveis 
-
-  @include respond-to(medium-screens) { margin-top: 10px;}
-  @include respond-to(handhelds) {margin: 5px auto 20px;};*/
-/* apply a natural box layout model to all elements, but allowing components to change */
-/*Uso --> Setar os breaks nas vari├íveis 
-
-  @include respond-to(medium-screens) { margin-top: 10px;}
-  @include respond-to(handhelds) {margin: 5px auto 20px;};*/
 /* apply a natural box layout model to all elements, but allowing components to change */
 html {
   box-sizing: border-box; }
@@ -15,7 +5,6 @@ html {
 *, *:before, *:after {
   box-sizing: inherit; }
 
-/* Resets */
 .list-unstyled {
   list-style: none;
   margin: 0 0 0 0;
@@ -32,7 +21,6 @@ button {
 h1 {
   margin: 0 0 0 0; }
 
-/* General Rules */
 header {
   border-bottom: 1px solid black;
   margin-bottom: 1em;
@@ -59,7 +47,6 @@ article {
   width: 100%;
   margin: 0 auto; }
 
-/* Inputs Rules*/
 .big-input {
   width: 100%;
   padding: 1em 1em 1em 1em;
@@ -73,7 +60,6 @@ article {
     transition-delay: 0s;
     border: 1px solid deepskyblue; }
 
-/* Buttons Rules */
 .big-button {
   padding: 0.5em 3em 0.5em 3em; }
 
@@ -82,49 +68,32 @@ article {
   .colorful-button:hover {
     background-color: deepskyblue; }
 
-/* Tasklist */
 .list-container {
   margin-top: 1em; }
 
 #taskList li {
-  display: inline-block;
   margin-bottom: 0.3em;
   padding: 0.5em;
   border-bottom: 0.3em solid skyblue;
   background-color: white;
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.24);
   transition: all 0.1s ease-in-out;
-  flex-basis: 100%;
-  width: 100%;
-  line-height: 2em; }
+  flex-basis: 100%; }
   #taskList li:hover {
     background-color: ghostwhite;
     border-bottom: 0.3em solid deepskyblue; }
-  #taskList li #controles {
-    display: inline-block;
-    width: 10.75269%;
-    text-align: right; }
-  #taskList li #descricao {
-    display: inline-block;
-    width: 86.02151%; }
-  @media only screen and (min-width: 451px) and (max-width: 649px) {
-    #taskList li #controles {
-      width: 9.67742%; } }
-  @media only screen and (max-width: 450px) {
-    #taskList li #controles {
-      width: 6.45161%; } }
+  #taskList li ul {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: columns; }
   #taskList li input {
-    margin: 0 0.53763% 0 0.53763%; }
+    margin: 0.5em 0.5em 0.5em 0.5em; }
   #taskList li.done {
     text-decoration: line-through;
     background-color: mediumslateblue !important;
     border-bottom: 0.3em solid blue;
     color: white; }
-  #taskList li i {
-    text-align: right; }
 
-/* Status Rules */
 .error {
   border: 1px solid red !important; }
 
-/*# sourceMappingURL=app.css.map */

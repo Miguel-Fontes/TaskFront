@@ -111,7 +111,7 @@ var TODO = (function (css, http) {
       tasks.push(new Task(value.id, value.description, value.status))
       taskListElement.innerHTML = taskListElement.innerHTML.concat('<li id=' + value.id + '><input type="checkbox"' +
         ' onclick="TODO.toggleDone(event)"><span id="descricao">' + value.description +
-        '</span><span id="controles"><i class="fa fa-trash" onclick="TODO.removeTask(event)"></span></i></li>')
+        '</span><span id="controles"><i class="fa fa-trash" onclick="TODO.removeTask(event)"></i></span></li>')
     }
   }
 

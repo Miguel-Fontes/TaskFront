@@ -5,6 +5,21 @@ $decoration-border-hover: deepskyblue;
 $alt-decoration-border: white;
 $alt-decoration-border-hover: white; 
 
+$break-small: 450px;
+$break-large: 650px;
+
+$tasklist-context: 930; // 952px. Usado para cálculo das medidas fluídas.
+
+
+
+// Design Responsivo
+@import "responsive";
+/*Uso --> Setar os breaks nas variáveis 
+
+  @include respond-to(medium-screens) { margin-top: 10px;}
+  @include respond-to(handhelds) {margin: 5px auto 20px;};*/
+  
+
 @mixin box-sizing() {
     html {
         box-sizing: border-box;
@@ -14,11 +29,37 @@ $alt-decoration-border-hover: white;
     }
 }
 
+@function fluidizePerc($context, $target) {
+    @return ($context / $target) * 100%;
+}
+
+@function fluidizeEm($target, $context) {
+    @return ($target / $context) * 1em;
+}
+
+@mixin shadows() {
+ box-shadow: -0px 1px 1px 1px $shadows-color;
+}
+
+@mixin shadowsAtivo() {
+  box-shadow: 1px 1px 8px 1px $shadows-color;
+}
+
+
 /* apply a natural box layout model to all elements, but allowing components to change */
+
+@mixin shadowsInterativas() {
+  @include shadows();
+  transition: box-shadow 0.2s ease-in-out;
+  &:hover {
+    @include shadowsAtivo();
+  }
+}
+
 
 @include box-sizing();
 
-// Resets
+/* Resets */
 .list-unstyled {
     list-style: none;
     margin: 0 0 0 0;
@@ -39,7 +80,7 @@ h1{
     margin: 0 0 0 0;
 }
 
-// General Rules
+/* General Rules */
 
 header {
 border-bottom: 1px solid black;
@@ -74,7 +115,7 @@ article {
 }
 
 
-// Inputs Rules
+/* Inputs Rules*/
 .big-input {
     width: 100%;
     padding: 1em 1em 1em 1em;
@@ -87,12 +128,11 @@ article {
                 transition-timing-function: ease-in;
                 transition-delay: 0s;
                 border: 1px solid deepskyblue;
-                //background-color: #cceeff;
             }
 }
 
 
-//Buttons Rules
+/* Buttons Rules */
 .big-button {
     padding: 0.5em 3em 0.5em 3em;
 }
@@ -105,8 +145,7 @@ article {
     }
 }
 
-
-// Tasklist
+/* Tasklist */
 .list-container {
     margin-top: 1em;
 }
@@ -121,28 +160,45 @@ article {
         box-shadow: 0 0 2px rgba(0,0,0,0.12),0 2px 4px rgba(0,0,0,0.24);
         transition: all 0.1s ease-in-out;
         flex-basis: 100%;
+        width: 100%;
+        line-height: 2em;
         
         &:hover {
             background-color: ghostwhite;
             border-bottom: 0.3em solid deepskyblue;
         }
         
-        span {
-            #controles {    
-                display: inline-block;  
-                width: 10%;
-            }
-            #descricao {
-                display: inline-block;  
-                width: 80%;
-            }    
-        }
-            
-
-        input {
-            margin: 0.5em 0.5em 0.5em 0.5em;
+        #controles {
+            display: inline-block;
+            width: fluidizePerc(100, $tasklist-context);
+            text-align: right;
         }
         
+        #descricao {
+            display: inline-block;  
+            width: fluidizePerc(800, $tasklist-context); 
+        }
+        
+        // Media Queries para telas pequenas -------------------------
+        @include respond-to(medium-screens) {         
+            #controles {
+                width: fluidizePerc(90, $tasklist-context);
+            }
+        }  
+        
+        @include respond-to(handhelds) {         
+            #controles {
+                width: fluidizePerc(60, $tasklist-context);
+            }
+        }
+        // -----------------------------------------------------------    
+  
+
+        input {
+            margin:0 fluidizePerc(5, $tasklist-context) 0 fluidizePerc(5, $tasklist-context);//   0.5em 0.5em 0.5em 0.5em;  
+        }
+    
+   
         &.done {
             text-decoration: line-through;
             background-color: mediumslateblue !important;
@@ -156,9 +212,7 @@ article {
     }
 }
 
-
-
-// Status Rules
+/* Status Rules */
 .error {
     border: 1px solid red !important;
 }
