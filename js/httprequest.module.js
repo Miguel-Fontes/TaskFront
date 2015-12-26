@@ -1,17 +1,16 @@
 /* global async */
 /* global method */
 var HTTPREQUEST = (function HttpRequest () {
-    
   // API
   return {
     xhrRequest: xhrRequestBuilder
   }
- 
+
   // BUILDERS
   function xhrRequestBuilder (config) {
     return new XhrRequest(config)
   }
-  
+
   // REQUEST OBJECTS
   function XhrRequest (config) {
     var xhr, srv = this, srvConfig = {}
@@ -23,8 +22,10 @@ var HTTPREQUEST = (function HttpRequest () {
     initialize()
 
     // API
-    this.send = send
-    this.open = open
+    srv.send = send
+    srv.open = open
+    srv.getConfiguration = getConfiguration
+    srv.getXhr = getXhr
 
     function initialize () {
       srvConfig.method = config.method || undefined
@@ -44,7 +45,7 @@ var HTTPREQUEST = (function HttpRequest () {
       }
 
       srv.isInitialized = true
-      return srv;
+      return srv
     }
 
     function getXhr () {
@@ -58,7 +59,7 @@ var HTTPREQUEST = (function HttpRequest () {
     function open (method, url, async) {
       if (srv.isInitialized) {
         xhr.open(srvConfig.method || method, srvConfig.url || url, srvConfig.async || async)
-        return srv;
+        return srv
       } else {
         return 'Favor inicializar o módulo via initialize()'
       }
@@ -67,7 +68,7 @@ var HTTPREQUEST = (function HttpRequest () {
     function send (data) {
       if (srv.isInitialized) {
         xhr.send(srvConfig.data || data || '')
-        return srv;
+        return srv
       } else {
         return 'Favor inicializar o módulo via initialize()'
       }

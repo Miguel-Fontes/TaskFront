@@ -113,6 +113,7 @@ article {
 
 #taskList {
     li {
+        display: inline-block;
         margin-bottom: 0.3em;
         padding: 0.5em;
         border-bottom: 0.3em solid skyblue;
@@ -126,12 +127,18 @@ article {
             border-bottom: 0.3em solid deepskyblue;
         }
         
-        ul {
-            display: flex;
-            flex-wrap: wrap;
-            flex-direction: columns;
+        span {
+            #controles {    
+                display: inline-block;  
+                width: 10%;
+            }
+            #descricao {
+                display: inline-block;  
+                width: 80%;
+            }    
         }
-        
+            
+
         input {
             margin: 0.5em 0.5em 0.5em 0.5em;
         }
@@ -142,6 +149,10 @@ article {
             border-bottom: 0.3em solid blue;
             color: white;
         }
+        
+       i {
+           text-align: right;
+       }
     }
 }
 
