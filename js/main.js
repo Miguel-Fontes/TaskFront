@@ -1,14 +1,16 @@
 var TODO = (function (css, http) {
-  var taskInputElement,
-    addButtonElement,
-    taskListElement,
-    taskInputId = 'taskInput',
-    addButtonId = 'addButton',
-    taskListId = 'taskList',
-    tasks = [],
-    id = 0,
-    backendUrl = 'http://localhost:8080',
-    tasksResource = '/tasks'
+  var todo = this
+
+  todo.todotaskInputElement,
+  todo.addButtonElement,
+  todo.taskListElement,
+  todo.taskInputId = 'taskInput',
+  todo.addButtonId = 'addButton',
+  todo.taskListId = 'taskList',
+  todo.tasks = [],
+  todo.currentId = 0,
+  todo.backendUrl = 'http://localhost:8080',
+  todo.tasksResource = '/tasks',
 
   activate()
 
@@ -16,35 +18,51 @@ var TODO = (function (css, http) {
     addTask: addTask,
     toggleDone: toggleDone,
     checkInput: checkInput,
-    getTasks: tasks,
+    getTasks: todo.tasks,
     removeTask: removeTask,
     syncTask: syncTask,
-    getAllTasks: getAllTasks
+    getAllTasks: getAllTasks,
+    getId: getId
+  }
+
+  function getId () {
+    return todo.currentId
   }
 
   function activate () {
     // Busco os handlers para facilitar o trabalho nos segmentos posteriores.  
-    taskInputElement = document.getElementById(taskInputId)
-    addButtonElement = document.getElementById(addButtonId)
-    taskListElement = document.getElementById(taskListId)
-    // Adicionar opções de configuração do módulo.
+    todo.taskInputElement = document.getElementById(todo.taskInputId)
+    todo.addButtonElement = document.getElementById(todo.addButtonId)
+    todo.taskListElement = document.getElementById(todo.taskListId)
 
-    getAllTasks()
+    // Busco todas as tarefas e as renderizo
+    getAllTasks(function (data) {
+      renderTasks(JSON.parse(data))
+    })
+
+    // Inicializo os protótipos legais 
     runPrototypes()
 
   }
 
-  function toggleDone (event) {
-    css.toggleClass(event.target.parentElement, 'done')
+  function toggleDone (e) {
+    var taskId = e.target.parentNode.id,
+      updatedTask = new Task()
 
-    var taskId = event.target.id
+    css.toggleClass(e.target.parentElement, 'done')
 
-    tasks.forEach(markTaskDone)
+    // TODO: Melhorar esta lógica de marcação e retrieve de valores. Estamos
+    // percorrendo o Array de tarefas duas vezes.
+    todo.tasks.forEach(markTaskDone)
+
+    updatedTask = todo.tasks.filter(function (obj) { if (obj.id == taskId) { return obj }})[0]
+
+    updateTask(updatedTask)
 
     function markTaskDone (task, index, array) {
       // Vai sempre passar por todas as tarefas.
       // Provavelmente esta não é a melhor forma de fazer isto, 
-      // mas estamos lidando com uma única lista, vai ter que server por enquanto.
+      // mas estamos lidando com uma única lista, vai ter que servir por enquanto.
 
       // Detalhe que a atribução é de !task.status
       task.done = task.id == taskId ? !task.done : task.done
@@ -52,28 +70,28 @@ var TODO = (function (css, http) {
   }
 
   function addTask () {
-    var task = taskInputElement.value, taskObject
+    var task = todo.taskInputElement.value, taskObject
     if (task != undefined && task.trim() != '' && task != '') {
-      taskInputElement.value = ''
-      taskObject = new Task(id, task, false)
+      todo.taskInputElement.value = ''
+      taskObject = new Task(todo.currentId, task, false)
       renderTasks(taskObject)
-      tasks.push(taskObject)
+      todo.tasks.push(taskObject)
       // TODO: Quem tem que gerar ID é o BackEnd. Verificar o que fazer. 
-      id++
+      todo.currentId++
       syncTask(taskObject)
-      css.removeClass(taskInputElement, 'error')
+      css.removeClass(todo.taskInputElement, 'error')
     } else {
-      css.addClass(taskInputElement, 'error')
+      css.addClass(todo.taskInputElement, 'error')
     }
   }
 
   function removeTask (e) {
+    // TODO: Dá pra melhorar essas parentadaNode aqui?
     var taskId = e.target.parentNode.parentNode.id
 
-    tasks = tasks.filterById(taskId)
-    
-    console.log(id)
-    console.log(tasks)
+    todo.tasks = todo.tasks.filterById(taskId)
+
+    console.log(todo.tasks)
 
     deleteTask(taskId)
 
@@ -95,6 +113,7 @@ var TODO = (function (css, http) {
 
   // Modelo Task.
   function Task (id, description, status) {
+      console.log(status)
     this.id = id
     this.description = description
     this.done = status
@@ -108,10 +127,26 @@ var TODO = (function (css, http) {
     }
 
     function render (value, index, array) {
-      tasks.push(new Task(value.id, value.description, value.status))
-      taskListElement.innerHTML = taskListElement.innerHTML.concat('<li id=' + value.id + '><input type="checkbox"' +
-        ' onclick="TODO.toggleDone(event)"><span id="descricao">' + value.description +
-        '</span><span id="controles"><i class="fa fa-trash" onclick="TODO.removeTask(event)"></i></span></li>')
+      todo.tasks.push(new Task(value.id, value.description, value.done))
+      todo.taskListElement.innerHTML = todo.taskListElement.innerHTML.concat('<li id=' + value.id + '>' +
+        '<input type="checkbox" onclick="TODO.toggleDone(event)"' +
+        (value.done ? 'checked' : '') +
+        '>' +
+        '<span id="descricao">' + value.description +
+        '</span>' +
+        '<span id="controles">' +
+        '<i class="fa fa-pencil-square-o"></i>' +
+        '<i class="fa fa-trash" onclick="TODO.removeTask(event)"></i>' +
+        '</span></li>')
+
+      // Se a tarefa já estiver concluída, adiciono a classe 'done'.
+      if (value.done) { css.toggleClass(document.getElementById(value.id), 'done') }
+
+      // Busco o maior ID dentre as tarefas existentes.
+      // Imagino que esta solução deva funcionar agora mas em um outro cenário
+      // pode ser que fique um tanto problemático.
+      // TODO: Podemos ter um call para o servidor que retorne o próximo ID?
+      todo.currentId = value.id > todo.currentId ? value.id : todo.currentId
     }
   }
 
@@ -119,13 +154,11 @@ var TODO = (function (css, http) {
   // Dá pra virar um módulo baseado nas interfaces REST.
   // Assim que terminar, refatorar para Websockets
   function syncTask (task) {
-    // TODO - CORRIGIR ESSA FUNCAO. TA ERRADO!
     var taskJSON = JSON.stringify(task)
-    console.log(taskJSON)
 
-    var xhr = http.xhrRequest({
+    http.xhrRequest({
       method: 'POST',
-      url: backendUrl + tasksResource,
+      url: todo.backendUrl + todo.tasksResource,
       async: true,
       data: taskJSON,
       callback: function (data) {console.log(data); }
@@ -133,36 +166,49 @@ var TODO = (function (css, http) {
       .send()
   }
 
-  function getAllTasks () {
-    var xhr = http.xhrRequest({
+  function getAllTasks (callback) {
+    http.xhrRequest({
       method: 'GET',
-      url: backendUrl + tasksResource,
+      url: todo.backendUrl + todo.tasksResource,
       async: true,
-      callback: function (data) { renderTasks(JSON.parse(data)) }
+      callback: callback
     }).open()
       .send()
   }
 
   function deleteTask (taskId) {
-    var xhr = http.xhrRequest({
+    http.xhrRequest({
       method: 'DELETE',
-      url: backendUrl + tasksResource + '/' + taskId,
+      url: todo.backendUrl + todo.tasksResource + '/' + taskId,
       dataType: 'text/plain',
       asyc: true,
       callback: function (data) { console.log(data); }
     }).open()
       .send()
-
-    console.log(xhr.getConfiguration())
   }
-  // CANDIDATAOS A SAIR DO MODULO
+
+  function updateTask (task) {
+    var taskJSON = JSON.stringify(task)
+    console.log(taskJSON)
+
+    http.xhrRequest({
+      method: 'PUT',
+      url: todo.backendUrl + todo.tasksResource + '/' + task.id,
+      data: taskJSON,
+      asyc: true,
+      callback: function (data) { console.log(data); }
+    }).open()
+      .send()
+  }
+
+  // TODO: CANDIDATAOS A SAIR DO MODULO
   // Prototype GOODIE.
   // Considerar mover para modulo huehuee
   function runPrototypes () {
     Array.prototype.filterById = function (id) {
-      var newArray = [];
+      var newArray = []
       newArray = this.filter(function (obj) { if (obj.id != id) return obj })
-      return newArray;
+      return newArray
     }
   }
 

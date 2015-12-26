@@ -88,7 +88,7 @@ article {
 
 #taskList li {
   display: inline-block;
-  margin-bottom: 0.3em;
+  margin-bottom: 0.5em;
   padding: 0.5em;
   border-bottom: 0.3em solid skyblue;
   background-color: white;
@@ -96,31 +96,27 @@ article {
   transition: all 0.1s ease-in-out;
   flex-basis: 100%;
   width: 100%;
-  line-height: 2em; }
+  line-height: 2em;
+  overflow: hidden; }
   #taskList li:hover {
     background-color: ghostwhite;
     border-bottom: 0.3em solid deepskyblue; }
   #taskList li #controles {
-    display: inline-block;
-    width: 10.75269%;
-    text-align: right; }
+    display: block;
+    text-align: right;
+    float: right; }
   #taskList li #descricao {
-    display: inline-block;
-    width: 86.02151%; }
-  @media only screen and (min-width: 451px) and (max-width: 649px) {
-    #taskList li #controles {
-      width: 9.67742%; } }
-  @media only screen and (max-width: 450px) {
-    #taskList li #controles {
-      width: 6.45161%; } }
+    max-width: 73.52941%;
+    overflow: hidden; }
   #taskList li input {
-    margin: 0 0.53763% 0 0.53763%; }
+    margin: 0 1.10294% 0 1.10294%; }
   #taskList li.done {
     text-decoration: line-through;
     background-color: mediumslateblue !important;
     border-bottom: 0.3em solid blue;
     color: white; }
   #taskList li i {
+    padding: 0 0.2em 0 0.2em;
     text-align: right; }
 
 /* Status Rules */

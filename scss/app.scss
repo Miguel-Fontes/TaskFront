@@ -8,7 +8,7 @@ $alt-decoration-border-hover: white;
 $break-small: 450px;
 $break-large: 650px;
 
-$tasklist-context: 930; // 952px. Usado para cálculo das medidas fluídas.
+$tasklist-context: 272; // 952px. Usado para cálculo das medidas fluídas.
 
 
 
@@ -153,7 +153,7 @@ article {
 #taskList {
     li {
         display: inline-block;
-        margin-bottom: 0.3em;
+        margin-bottom: 0.5em;
         padding: 0.5em;
         border-bottom: 0.3em solid skyblue;
         background-color: white;
@@ -161,7 +161,8 @@ article {
         transition: all 0.1s ease-in-out;
         flex-basis: 100%;
         width: 100%;
-        line-height: 2em;
+        line-height: 2em;        
+        overflow: hidden;
         
         &:hover {
             background-color: ghostwhite;
@@ -169,33 +170,19 @@ article {
         }
         
         #controles {
-            display: inline-block;
-            width: fluidizePerc(100, $tasklist-context);
+            display: block;
             text-align: right;
+            //min-width: fluidizePerc(80, $tasklist-context);
+            float: right;
         }
         
         #descricao {
-            display: inline-block;  
-            width: fluidizePerc(800, $tasklist-context); 
+            max-width: fluidizePerc(200, $tasklist-context);
+            overflow: hidden;
         }
-        
-        // Media Queries para telas pequenas -------------------------
-        @include respond-to(medium-screens) {         
-            #controles {
-                width: fluidizePerc(90, $tasklist-context);
-            }
-        }  
-        
-        @include respond-to(handhelds) {         
-            #controles {
-                width: fluidizePerc(60, $tasklist-context);
-            }
-        }
-        // -----------------------------------------------------------    
-  
 
         input {
-            margin:0 fluidizePerc(5, $tasklist-context) 0 fluidizePerc(5, $tasklist-context);//   0.5em 0.5em 0.5em 0.5em;  
+           margin:0 fluidizePerc(3, $tasklist-context) 0 fluidizePerc(3, $tasklist-context);//   0.5em 0.5em 0.5em 0.5em;  
         }
     
    
@@ -207,6 +194,8 @@ article {
         }
         
        i {
+           //margin-left: 0.5em;
+           padding: 0 0.2em 0 0.2em;
            text-align: right;
        }
     }
