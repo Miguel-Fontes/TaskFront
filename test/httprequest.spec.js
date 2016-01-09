@@ -43,14 +43,15 @@ describe('HTTP Request Module', function () {
         http.get('http://localhost:8080/tasks', function (data) {
           expect(data).not.toBe(undefined)
           console.log(data)
-          console.log(http.getConfiguration())
           done()
         })
       })
 
-      it('should send a task and delete it after', function (done) {
+      it('should send a task via post', function (done) {
         http.post('http://localhost:8080/tasks', JSON.stringify(task), function (data) {
-          http.remove(('http://localhost:8080/tasks/999'), function (data) {
+          http.remove('http://localhost:8080/tasks/999', function (data) {
+            expect(data).toBe('Remover tarefa')
+            console.log(data)
             done()
           })
         })

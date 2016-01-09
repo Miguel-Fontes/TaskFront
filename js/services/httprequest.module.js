@@ -97,7 +97,7 @@ var HTTPREQUEST = (function HttpRequest () {
         callback: callback || undefined
       }).open()
         .send()
-
+    console.log(callback)
     }
 
     function getXhr () {
