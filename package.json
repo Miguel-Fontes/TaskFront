@@ -1,5 +1,5 @@
 {
-    "name": "node",
+    "name": "todofront",
     "version": "0.0.1",
     "description": "TodoApp",
     "main": "main.js",
