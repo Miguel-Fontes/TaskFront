@@ -47,6 +47,14 @@ var HTTPREQUEST = (function HttpRequest () {
       srv.isInitialized = true
       return srv
     }
+    
+    function get() {
+        
+    }
+    
+    function post() {
+        
+    }
 
     function getXhr () {
       return xhr
@@ -58,7 +66,7 @@ var HTTPREQUEST = (function HttpRequest () {
 
     function open (method, url, async) {
       if (srv.isInitialized) {
-        xhr.open(srvConfig.method || method, srvConfig.url || url, srvConfig.async || async)
+        xhr.open(srvConfig.method || method, srvConfig.url || url, srvConfig.async || async) // TODO: VALIDAR, ISSO PODE ESTAR ERRADO
         return srv
       } else {
         return 'Favor inicializar o módulo via initialize()'

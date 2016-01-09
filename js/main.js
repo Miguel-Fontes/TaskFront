@@ -63,8 +63,7 @@ var TODO = (function (css, http) {
       // Vai sempre passar por todas as tarefas.
       // Provavelmente esta não é a melhor forma de fazer isto, 
       // mas estamos lidando com uma única lista, vai ter que servir por enquanto.
-
-      // Detalhe que a atribução é de !task.status
+      
       task.done = task.id == taskId ? !task.done : task.done
     }
   }
@@ -153,6 +152,9 @@ var TODO = (function (css, http) {
   // FUNÇÕES PARA CONEXÃO COM BACKEND
   // Dá pra virar um módulo baseado nas interfaces REST.
   // Assim que terminar, refatorar para Websockets
+  // TODO: Melhorar essas interfaces e criar short calls baseado nods métodos 
+  // http.POST(todo.backendUrl + todo.tasksResource, taskJSON), 
+  // http.query(todo.backendUrl + todo.tasksResource)
   function syncTask (task) {
     var taskJSON = JSON.stringify(task)
 
