@@ -47,12 +47,14 @@ describe('HTTP Request Module', function () {
         })
       })
 
-      it('should send a task via post', function (done) {
+      it('should send a task via post, update it as done and delete it', function (done) {
         http.post('http://localhost:8080/tasks', JSON.stringify(task), function (data) {
-          http.remove('http://localhost:8080/tasks/999', function (data) {
-            expect(data).toBe('Remover tarefa')
-            console.log(data)
-            done()
+          task.done = true
+          http.put('http://localhost:8080/tasks/999', JSON.stringify(task), function (data) {
+            http.remove('http://localhost:8080/tasks/999', function (data) {
+              expect(data).toBe('Remover tarefa')
+              done()
+            })
           })
         })
       })

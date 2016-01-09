@@ -1,9 +1,9 @@
-var app = (function (todo, http, css, dom) {
+var app = (function (todo, http, css, dom, utils) {
   
   console.log('Inicializando aplicação!')
   
   return {
-    todo: todo.build(css, http, dom)
+    todo: todo.build(css, http, dom, utils)
   }
 
-})(TODO, HTTPREQUEST, CSSTOOLS, DOMTOOLS)
+})(TODO, HTTPREQUEST, CSSTOOLS, DOMTOOLS, UTILS)

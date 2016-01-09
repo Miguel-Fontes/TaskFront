@@ -17,6 +17,7 @@ module.exports = function (config) {
       'js/vendor/*.js',
 
       // Load services
+      'js/services/utils.module.js',
       'js/services/*.js',
 
       // Load todo module

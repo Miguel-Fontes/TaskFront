@@ -1,4 +1,4 @@
-var DOMTOOLS = (function () {
+var DOMTOOLS = (function (utils) {
   return {
     build: domToolsBuilder
   }
@@ -15,12 +15,15 @@ var DOMTOOLS = (function () {
     md.byTag = byTag
     md.byName = byName
     md.byClass = byClass
-    md.removeDOMNode = removeDOMNode
+    md.removeNode = removeNode
     md.updateAttr = updateAttr
-    md.createDOMNode = createDOMNode
+    md.createNode = createNode
     md.appendNode = appendNode
+    md.findParentElement = findParentElement
+    md.findChildById = findChildById
+    md.getElementFromEvent = getElementFromEvent
 
-    function byId (id) {
+     function byId (id) {
       return doc.getElementById(id)
     }
 
@@ -40,7 +43,7 @@ var DOMTOOLS = (function () {
       element[attr] = value
     }
 
-    function createDOMNode (type, content) {
+    function createNode (type, content) {
       var node = doc.createElement(type)
 
       updateAttr(node, 'innerHTML', content || '')
@@ -48,11 +51,34 @@ var DOMTOOLS = (function () {
       return node
     }
 
-    function appendNode (parent, child) {
+   function appendNode (parent, child) {
       parent.appendChild(child)
     }
 
-    function removeDOMNode (element, targetNode) {
+    function removeNode (element) {
+      element.remove()
+    }
+
+    // ---------------TODO: MELHORAR ESSE KCT---------------------
+    function findChildById (element, id) {
+      var node = element.firstChild
+
+      while (node.id != id) {
+        node = node.nextSibling
+        if (node.localName == null) {
+          break
+        }
+      }
+
+      if (node.localName != null) {
+        return node
+      } else {
+        throw ('Nó não existe')
+      }
+    }
+    //---------------------------------------------------------------
+
+    function findParentElement (element, targetNode) {
       var node = element
 
       while (node.localName != targetNode) {
@@ -63,11 +89,19 @@ var DOMTOOLS = (function () {
       }
 
       if (node.localName != null) {
-        node.remove()
+        return node
       } else {
         throw ('Nó não existe')
       }
     }
 
+    function getElementFromEvent (e) {
+      if (utils.isType(e, 'MouseEvent')) {
+        return e.target
+      } else {
+        return e
+      }
+    }
+
   }
-})()
+})(UTILS)

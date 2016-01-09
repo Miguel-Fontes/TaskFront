@@ -4,12 +4,12 @@ var TODO = (function () {
   }
 
   // BUILDER
-  function TodoBuilder (css, http, dom) {
-    return new TodoService(css, http, dom.build(document))
+  function TodoBuilder (css, http, dom, utils) {
+    return new TodoService(css, http, dom.build(document), utils)
   }
 
   // TODO SERVICE
-  function TodoService (css, http, dom) {
+  function TodoService (css, http, dom, utils) {
     var md = this,
       taskInputElement,
       addButtonElement,
@@ -23,10 +23,11 @@ var TODO = (function () {
       tasksResource = '/tasks'
 
     // API
-    md.addTask = addTask,
-    md.toggleDone = toggleDone,
-    md.checkInput = checkInput,
+    md.addTask = addTask
+    md.toggleDone = toggleDone
+    md.checkInput = checkInput
     md.removeTask = removeTask
+    md.editTask = editTask
 
     // INICIALIZACAO
     activate()
@@ -59,7 +60,7 @@ var TODO = (function () {
 
       updatedTask = tasks.filter(function (obj) { if (obj.id == taskId) { return obj }})[0]
 
-      updateTask(updatedTask)
+      updateTask(updatedTask, taskId)
 
       function markTaskDone (task, index, array) {
         // Vai sempre passar por todas as tarefas.
@@ -86,19 +87,33 @@ var TODO = (function () {
       }
     }
 
+    function editTask (e) {
+      let eventElement = dom.getElementFromEvent(e)
+
+      let liTaskElement = dom.findParentElement(eventElement, 'li')
+      let taskDescription = dom.findChildById(liTaskElement, 'descricao')
+
+      dom.updateAttr(taskInputElement, 'value', taskDescription.innerHTML)
+
+      removeTask(eventElement)
+
+    }
+
     function removeTask (e) {
-      // TODO: Dá pra melhorar essas parentadaNode aqui?
-      var taskId = e.target.parentNode.parentNode.id
+      let eventElement = dom.getElementFromEvent(e)
+
+      var liTaskElement = dom.findParentElement(eventElement, 'li')
+      var taskId = liTaskElement.id
 
       tasks = tasks.filterById(taskId)
 
       deleteTask(taskId)
 
-      dom.removeDOMNode(e.target, 'li')
+      dom.removeNode(liTaskElement)
 
-      // Importante verificar aqui se o nó foi realmente removido.
-      // Como havia um bind com o Javascript, provavelmente o Browser não irá remover.
-      // TODO: Pesquisar este aspecto e pensar em soluções.
+    // Importante verificar aqui se o nó foi realmente removido.
+    // Como havia um bind com o Javascript, provavelmente o Browser não irá remover.
+    // TODO: Pesquisar este aspecto e pensar em soluções.
     }
 
     // Função que verifica os caracteres inputados no input de tasks.
@@ -117,7 +132,7 @@ var TODO = (function () {
     }
 
     function renderTasks (tasksObj) {
-      if (isType(tasksObj, 'Array')) {
+      if (utils.isType(tasksObj, 'Array')) {
         tasksObj.forEach(render)
       } else {
         render(tasksObj)
@@ -133,11 +148,11 @@ var TODO = (function () {
           '<span id="descricao">' + value.description +
           '</span>' +
           '<span id="controles">' +
-          '<i class="fa fa-pencil-square-o"></i>' +
+          '<i class="fa fa-pencil-square-o" onclick="app.todo.editTask(event)"></i>' +
           '<i class="fa fa-trash" onclick="app.todo.removeTask(event)"></i>' +
           '</span></li>')
 
-        dom.appendNode(taskListElement, dom.createDOMNode('innerHTML', taskNodeContent))
+        dom.appendNode(taskListElement, dom.createNode('innerHTML', taskNodeContent))
 
         // Se a tarefa já estiver concluída, adiciono a classe 'done'.
         if (value.done) { css.toggleClass(dom.byId(value.id), 'done') }
@@ -166,7 +181,7 @@ var TODO = (function () {
       http.xhrRequest().remove(backendUrl + tasksResource + '/' + taskId)
     }
 
-    function updateTask (task) {
+    function updateTask (task, taskId) {
       var taskJSON = JSON.stringify(task)
       http.xhrRequest().put((backendUrl + tasksResource + '/' + taskId), taskJSON)
     }
@@ -181,13 +196,6 @@ var TODO = (function () {
         return newArray
       }
     }
-
-    // FUNÇÃO PURA, PRONTA PARA SER EXTRAÍDA PARA OUTRO MODULO ----------
-    function isType (obj, type) {
-      var clas = Object.prototype.toString.call(obj).slice(8, -1)
-      return obj !== undefined && obj !== null && clas === type
-    }
-    // ------------------------------------------------------------------
 
   }
 })()
