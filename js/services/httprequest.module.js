@@ -1,5 +1,4 @@
-/* global async */
-/* global method */
+'use strict'
 var HTTPREQUEST = (function HttpRequest () {
   // API
   return {
@@ -19,15 +18,19 @@ var HTTPREQUEST = (function HttpRequest () {
 
     srv.isInitialized = false
 
-    initialize()
+    initialize(config)
 
     // API
     srv.send = send
     srv.open = open
     srv.getConfiguration = getConfiguration
     srv.getXhr = getXhr
+    srv.get = get
+    srv.post = post
+    srv.put = put
+    srv.remove = remove
 
-    function initialize () {
+    function initialize (config) {
       config = config || {}
 
       srvConfig.method = config.method || undefined
@@ -50,20 +53,50 @@ var HTTPREQUEST = (function HttpRequest () {
       return srv
     }
 
-    function get () {
+    function get (url, callback) {
       // code
+      initialize({
+        method: 'GET',
+        url: url,
+        async: true,
+        callback: callback || undefined
+      }).open()
+        .send()
     }
 
-    function post () {
+    function post (url, data, callback) {
       // code
+      initialize({
+        method: 'POST',
+        url: url,
+        async: true,
+        data: data,
+        callback: callback || undefined
+      }).open()
+        .send()
     }
 
-    function put () {
+    function put (url, data, callback) {
       // code
+      initialize({
+        method: 'PUT',
+        url: url,
+        async: true,
+        data: data,
+        callback: callback || undefined
+      }).open()
+        .send()
     }
 
-    function remove () {
+    function remove (url, callback) {
       // code
+      initialize({
+        method: 'DELETE',
+        url: url,
+        async: true,
+        callback: callback || undefined
+      }).open()
+        .send()
 
     }
 
@@ -77,7 +110,7 @@ var HTTPREQUEST = (function HttpRequest () {
 
     function open (method, url, async) {
       if (srv.isInitialized) {
-        xhr.open(srvConfig.method || method, srvConfig.url || url, srvConfig.async || async) // TODO: VALIDAR, ISSO PODE ESTAR ERRADO
+        xhr.open(srvConfig.method || method, srvConfig.url || url, srvConfig.async || async)
         return srv
       } else {
         return 'Favor inicializar o módulo via initialize()'
@@ -95,6 +128,7 @@ var HTTPREQUEST = (function HttpRequest () {
 
     function defaultCallback (data) {
       console.log(data)
+      return data
     }
   }
 

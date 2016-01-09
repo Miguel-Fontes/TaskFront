@@ -1,16 +1,15 @@
-var TODO = (function (css, http) {
-    
+var TODO = (function () {
   return {
-      build: TodoBuilder
+    build: TodoBuilder
   }
-    
+
   // BUILDER
-  function TodoBuilder () {
-    return new TodoService(css, http)
+  function TodoBuilder (css, http, dom) {
+    return new TodoService(css, http, dom.build(document))
   }
 
   // TODO SERVICE
-  function TodoService (css, http) {
+  function TodoService (css, http, dom) {
     var md = this,
       taskInputElement,
       addButtonElement,
@@ -34,9 +33,9 @@ var TODO = (function (css, http) {
 
     function activate () {
       // Busco os handlers para facilitar o trabalho nos segmentos posteriores.  
-      taskInputElement = document.getElementById(taskInputId)
-      addButtonElement = document.getElementById(addButtonId)
-      taskListElement = document.getElementById(taskListId)
+      taskInputElement = dom.byId(taskInputId) // document.getElementById(taskInputId)
+      addButtonElement = dom.byId(addButtonId)
+      taskListElement = dom.byId(taskListId)
 
       // Busco todas as tarefas e as renderizo
       getAllTasks(function (data) {
@@ -74,7 +73,7 @@ var TODO = (function (css, http) {
     function addTask () {
       var task = taskInputElement.value, taskObject
       if (task != undefined && task.trim() != '' && task != '') {
-        taskInputElement.value = ''
+        dom.updateAttr(taskInputElement, 'value', '')
         taskObject = new Task(currentId, task, false)
         renderTasks(taskObject)
         tasks.push(taskObject)
@@ -95,12 +94,11 @@ var TODO = (function (css, http) {
 
       deleteTask(taskId)
 
-      removeDOMNode(e.target, 'li')
+      dom.removeDOMNode(e.target, 'li')
 
       // Importante verificar aqui se o nó foi realmente removido.
       // Como havia um bind com o Javascript, provavelmente o Browser não irá remover.
       // TODO: Pesquisar este aspecto e pensar em soluções.
-
     }
 
     // Função que verifica os caracteres inputados no input de tasks.
@@ -127,7 +125,8 @@ var TODO = (function (css, http) {
 
       function render (value, index, array) {
         tasks.push(new Task(value.id, value.description, value.done))
-        taskListElement.innerHTML = taskListElement.innerHTML.concat('<li id=' + value.id + '>' +
+
+        var taskNodeContent = ('<li id=' + value.id + '>' +
           '<input type="checkbox" onclick="app.todo.toggleDone(event)"' +
           (value.done ? 'checked' : '') +
           '>' +
@@ -138,8 +137,10 @@ var TODO = (function (css, http) {
           '<i class="fa fa-trash" onclick="app.todo.removeTask(event)"></i>' +
           '</span></li>')
 
+        dom.appendNode(taskListElement, dom.createDOMNode('innerHTML', taskNodeContent))
+
         // Se a tarefa já estiver concluída, adiciono a classe 'done'.
-        if (value.done) { css.toggleClass(document.getElementById(value.id), 'done') }
+        if (value.done) { css.toggleClass(dom.byId(value.id), 'done') }
 
         // Busco o maior ID dentre as tarefas existentes.
         // Imagino que esta solução deva funcionar agora mas em um outro cenário
@@ -152,57 +153,25 @@ var TODO = (function (css, http) {
     // FUNÇÕES PARA CONEXÃO COM BACKEND
     // Dá pra virar um módulo baseado nas interfaces REST.
     // Assim que terminar, refatorar para Websockets
-    // TODO: Melhorar essas interfaces e criar short calls baseado nods métodos 
-    // http.POST(backendUrl + tasksResource, taskJSON), 
-    // http.query(backendUrl + tasksResource)
     function syncTask (task) {
       var taskJSON = JSON.stringify(task)
-
-      http.xhrRequest({
-        method: 'POST',
-        url: backendUrl + tasksResource,
-        async: true,
-        data: taskJSON,
-        callback: function (data) {console.log(data); }
-      }).open()
-        .send()
+      http.xhrRequest().post((backendUrl + tasksResource), taskJSON)
     }
 
     function getAllTasks (callback) {
-      http.xhrRequest({
-        method: 'GET',
-        url: backendUrl + tasksResource,
-        async: true,
-        callback: callback
-      }).open()
-        .send()
+      http.xhrRequest().get((backendUrl + tasksResource), callback)
     }
 
     function deleteTask (taskId) {
-      http.xhrRequest({
-        method: 'DELETE',
-        url: backendUrl + tasksResource + '/' + taskId,
-        dataType: 'text/plain',
-        asyc: true,
-        callback: function (data) { console.log(data); }
-      }).open()
-        .send()
+      http.xhrRequest().remove(backendUrl + tasksResource + '/' + taskId)
     }
 
     function updateTask (task) {
       var taskJSON = JSON.stringify(task)
-
-      http.xhrRequest({
-        method: 'PUT',
-        url: backendUrl + tasksResource + '/' + task.id,
-        data: taskJSON,
-        asyc: true,
-        callback: function (data) { console.log(data); }
-      }).open()
-        .send()
+      http.xhrRequest().put((backendUrl + tasksResource + '/' + taskId), taskJSON)
     }
 
-    // TODO: CANDIDATAOS A SAIR DO MODULO
+    // TODO: CANDIDATOS A SAIR DO MODULO
     // Prototype GOODIE.
     // Considerar mover para modulo huehuee
     function runPrototypes () {
@@ -220,23 +189,5 @@ var TODO = (function (css, http) {
     }
     // ------------------------------------------------------------------
 
-    // FUNÇÃO PURA, PRONTA PARA SER EXTRAÍDA PARA OUTRO MODULO ----------
-    function removeDOMNode (element, targetNode) {
-      var node = element
-
-      while (node.localName != targetNode) {
-        node = node.parentNode
-        if (node.localName == null) {
-          break
-        }
-      }
-
-      if (node.localName != null) {
-        node.remove()
-      } else {
-        throw ('Nó não existe')
-      }
-    }
-  // --------------------------------------------------------------------
   }
-})(CSSTOOLS, HTTPREQUEST)
+})()
