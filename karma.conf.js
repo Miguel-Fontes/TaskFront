@@ -16,8 +16,18 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      "js/**/*.js",
-      "test/**/*.spec.js"
+      
+      // Load services
+      "js/services/*.js",
+      
+      // Load todo module
+      "js/todo/*.js",
+      
+      // App module
+      "js/app.js",
+      
+      // Load tests
+      "test/**/*.spec.js",
     ],
     
 

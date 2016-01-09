@@ -13,11 +13,11 @@ var HTTPREQUEST = (function HttpRequest () {
 
   // REQUEST OBJECTS
   function XhrRequest (config) {
-    var xhr, srv = this, srvConfig = {}
+    var xhr,
+      srv = this,
+      srvConfig = {}
 
-    this.isInitialized = false,
-
-    srvConfig = {}
+    srv.isInitialized = false
 
     initialize()
 
@@ -28,6 +28,8 @@ var HTTPREQUEST = (function HttpRequest () {
     srv.getXhr = getXhr
 
     function initialize () {
+      config = config || {}
+
       srvConfig.method = config.method || undefined
       srvConfig.url = config.url || undefined
       srvConfig.headers = config.headers || undefined
@@ -47,13 +49,22 @@ var HTTPREQUEST = (function HttpRequest () {
       srv.isInitialized = true
       return srv
     }
-    
-    function get() {
-        
+
+    function get () {
+      // code
     }
-    
-    function post() {
-        
+
+    function post () {
+      // code
+    }
+
+    function put () {
+      // code
+    }
+
+    function remove () {
+      // code
+
     }
 
     function getXhr () {
