@@ -28,6 +28,8 @@ var TODO = (function () {
     md.checkInput = checkInput
     md.removeTask = removeTask
     md.editTask = editTask
+    md.moveUp = moveUp
+    md.moveDown = moveDown
 
     // INICIALIZACAO
     activate()
@@ -131,6 +133,17 @@ var TODO = (function () {
       this.done = status
     }
 
+    function getTaskElement (e) {
+      return dom.findParentElement(dom.getElementFromEvent(e), 'li')
+    }
+
+    function moveUp (e) {
+      dom.moveBefore(taskListElement, getTaskElement(e))
+    }
+    function moveDown (e) {
+      dom.moveAfter(taskListElement, getTaskElement(e))
+    }
+
     function renderTasks (tasksObj) {
       if (utils.isType(tasksObj, 'Array')) {
         tasksObj.forEach(render)
@@ -141,18 +154,24 @@ var TODO = (function () {
       function render (value, index, array) {
         tasks.push(new Task(value.id, value.description, value.done))
 
-        var taskNodeContent = ('<li id=' + value.id + '>' +
-          '<input type="checkbox" onclick="app.todo.toggleDone(event)"' +
+        var taskNodeContent = (
+        '<input type="checkbox" onclick="app.todo.toggleDone(event)"' +
           (value.done ? 'checked' : '') +
           '>' +
           '<span id="descricao">' + value.description +
           '</span>' +
           '<span id="controles">' +
+          '<i class="fa fa-chevron-up" onclick="app.todo.moveUp(event)"></i>' +
+          '<i class="fa fa-chevron-down" onclick="app.todo.moveDown(event)"></i>' +
           '<i class="fa fa-pencil-square-o" onclick="app.todo.editTask(event)"></i>' +
           '<i class="fa fa-trash" onclick="app.todo.removeTask(event)"></i>' +
-          '</span></li>')
+          '</span>')
 
-        dom.appendNode(taskListElement, dom.createNode('innerHTML', taskNodeContent))
+        var taskNode = dom.createNode('li', taskNodeContent)
+
+        dom.updateAttr(taskNode, 'id', value.id)
+
+        dom.appendNode(taskListElement, taskNode)
 
         // Se a tarefa já estiver concluída, adiciono a classe 'done'.
         if (value.done) { css.toggleClass(dom.byId(value.id), 'done') }

@@ -22,6 +22,8 @@ var DOMTOOLS = (function (utils) {
     md.findParentElement = findParentElement
     md.findChildById = findChildById
     md.getElementFromEvent = getElementFromEvent
+    md.moveBefore = moveBefore
+    md.moveAfter = moveAfter
 
      function byId (id) {
       return doc.getElementById(id)
@@ -57,6 +59,14 @@ var DOMTOOLS = (function (utils) {
 
     function removeNode (element) {
       element.remove()
+    }
+    
+    function moveBefore(container, element) {
+        container.insertBefore(element, element.previousSibling)
+    }
+    
+    function moveAfter(container, element) {
+        container.insertBefore(element.nextSibling, element)
     }
 
     // ---------------TODO: MELHORAR ESSE KCT---------------------
