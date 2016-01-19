@@ -1,3 +1,4 @@
+'use strict'
 var TODO = (function () {
   return {
     build: TodoBuilder
@@ -5,7 +6,7 @@ var TODO = (function () {
 
   // BUILDER
   function TodoBuilder (css, http, dom, utils) {
-    return new TodoService(css, http, dom.build(document), utils)
+    return new TodoService(css, http, dom, utils)
   }
 
   // TODO SERVICE
@@ -36,7 +37,7 @@ var TODO = (function () {
 
     function activate () {
       // Busco os handlers para facilitar o trabalho nos segmentos posteriores.  
-      taskInputElement = dom.byId(taskInputId) // document.getElementById(taskInputId)
+      taskInputElement = dom.byId(taskInputId)
       addButtonElement = dom.byId(addButtonId)
       taskListElement = dom.byId(taskListId)
 
@@ -74,6 +75,7 @@ var TODO = (function () {
     }
 
     function addTask () {
+      // TODO: QUE DOR LER ISSO AQUI. MELHORAR O CODIGO PLZ
       var task = taskInputElement.value, taskObject
       if (task != undefined && task.trim() != '' && task != '') {
         dom.updateAttr(taskInputElement, 'value', '')
@@ -188,7 +190,7 @@ var TODO = (function () {
     // Dá pra virar um módulo baseado nas interfaces REST.
     // Assim que terminar, refatorar para Websockets
     function syncTask (task) {
-      var taskJSON = JSON.stringify(task)
+      let taskJSON = JSON.stringify(task)
       http.xhrRequest().post((backendUrl + tasksResource), taskJSON)
     }
 
@@ -201,7 +203,7 @@ var TODO = (function () {
     }
 
     function updateTask (task, taskId) {
-      var taskJSON = JSON.stringify(task)
+      let taskJSON = JSON.stringify(task)
       http.xhrRequest().put((backendUrl + tasksResource + '/' + taskId), taskJSON)
     }
 

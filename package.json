@@ -1,26 +1,29 @@
 {
-    "name": "todofront",
-    "version": "0.0.1",
-    "description": "TodoApp",
-    "main": "main.js",
-    "directories": {
-        "doc": "doc"
-    },
-    "scripts": {
-        "start": "http-server -a localhost -p 8000 -c-1",
-        "pretest": "npm install",
-        "test": "karma start karma.conf.js",
-        "test-single-run": "karma start karma.conf.js  --single-run"
-    },
-    "author": "Miguel Fontes",
-    "license": "ISC",
-    "devDependencies": {
-        "babel-core": "^6.4.0",
-        "babel-preset-es2015": "^6.3.13",
-        "http-server": "^0.8.5",
-        "karma": "^0.13.19",
-        "karma-babel-preprocessor": "^6.0.1",
-        "karma-verbose-summary-reporter": "0.0.1",
-        "protractor": "^3.0.0"
-    }
+  "name": "todofront",
+  "version": "0.0.1",
+  "description": "TodoApp",
+  "main": "main.js",
+  "directories": {
+    "doc": "doc"
+  },
+  "scripts": {
+    "start": "http-server -a localhost -p 8000 -c-1",
+    "pretest": "npm install",
+    "test": "karma start karma.conf.js",
+    "test-single-run": "karma start karma.conf.js  --single-run"
+  },
+  "author": "Miguel Fontes",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-core": "^6.4.0",
+    "babel-preset-es2015": "^6.3.13",
+    "http-server": "^0.8.5",
+    "karma": "^0.13.19",
+    "karma-babel-preprocessor": "^6.0.1",
+    "karma-verbose-summary-reporter": "0.0.1",
+    "protractor": "^3.0.0"
+  },
+  "dependencies": {
+    "http-server": "^0.8.5"
+  }
 }

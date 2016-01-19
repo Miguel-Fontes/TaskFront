@@ -97,7 +97,6 @@ var HTTPREQUEST = (function HttpRequest () {
         callback: callback || undefined
       }).open()
         .send()
-    console.log(callback)
     }
 
     function getXhr () {
@@ -110,6 +109,7 @@ var HTTPREQUEST = (function HttpRequest () {
 
     function open (method, url, async) {
       if (srv.isInitialized) {
+          // faltam configurações aqui como, por exemplo, datatype
         xhr.open(srvConfig.method || method, srvConfig.url || url, srvConfig.async || async)
         return srv
       } else {
@@ -127,7 +127,6 @@ var HTTPREQUEST = (function HttpRequest () {
     }
 
     function defaultCallback (data) {
-      console.log(data)
       return data
     }
   }
